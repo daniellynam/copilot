@@ -1,8 +1,3 @@
-// <?php
-// echo "Hello, World!";
-// ?>
-
-
 <!DOCTYPE html>
 <html>
 <head>
