@@ -10,7 +10,7 @@
       }
 
       .container {
-        width: 80%;
+        width: 100%;
         margin: 0 auto;
         margin-top: 50vh;
         transform: translateY(-50%);
@@ -86,12 +86,16 @@
         text-align: right;
         background-color: #e0e0e0;
         border: none;
+        border: none !important;
+        box-shadow: none !important;
       }
 
-      .webchat .webchat__bubble--from-bot {
+     .webchat .webchat__bubble--from-bot {
         text-align: left;
         background-color: #ffffff;
         border: none;
+        border: none !important;
+        box-shadow: none !important;
       }
     </style>
   </head>
@@ -101,9 +105,9 @@
       <div class="top-section">
         <div class="section prompts">
           <h2>Top Prompts</h2>
-          <button class="prompt-button" onclick="sendMessage('Prompt 1')">Prompt 1</button>
-          <button class="prompt-button" onclick="sendMessage('Prompt 2')">Prompt 2</button>
-          <button class="prompt-button" onclick="sendMessage('Prompt 3')">Prompt 3</button>
+          <button class="prompt-button" onclick="sendMessage('Prompt 1')">Top 3 projects costs</button>
+          <button class="prompt-button" onclick="sendMessage('Prompt 2')">Major program issues</button>
+          <button class="prompt-button" onclick="sendMessage('Prompt 3')">Delayed projects</button>
         </div>
         <div class="section gauge">
           <h2>Gauge</h2>
