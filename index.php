@@ -27,7 +27,7 @@
         width: 80%;
         display: flex;
         justify-content: space-between;
-        margin-bottom: 20px;
+        margin: 0 auto 20px auto; /* top: 0, horizontal: auto, bottom: 20px */
       }
 
       .section {
@@ -83,8 +83,8 @@
         height: 500px;
       }
 
-      .webchat__bubble--from-user,
-      .webchat__bubble--from-bot {
+      .webchat__bubble--from-user .webchat__bubble__content,
+      .webchat__bubble--from-bot .webchat__bubble__content {
         border: none !important;
         box-shadow: none !important;
       }
