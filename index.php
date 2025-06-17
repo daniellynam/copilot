@@ -112,9 +112,9 @@
       <div class="top-section">
         <div class="section prompts">
           <h2>Top Prompts</h2>
-          <button class="prompt-button" onclick="sendMessage('Prompt 1')">Top 3 projects costs</button>
-          <button class="prompt-button" onclick="sendMessage('Prompt 2')">Major program issues</button>
-          <button class="prompt-button" onclick="sendMessage('Prompt 3')">Delayed projects</button>
+          <button class="prompt-button" onclick="sendMessage('Top 3 projects costs')">Top 3 projects costs</button>
+          <button class="prompt-button" onclick="sendMessage('Major program issues')">Major program issues</button>
+          <button class="prompt-button" onclick="sendMessage('Delayed projects')">Delayed projects</button>
         </div>
         <div class="section gauge">
           <h2>Gauge</h2>
