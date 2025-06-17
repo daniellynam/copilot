@@ -1,11 +1,9 @@
-
 <!doctype html>
 <html lang="en">
   <head>
     <title>Senator Workbench</title>
     <style>
-      html,
-      body {
+      html, body {
         height: 100%;
         margin: 0;
         font-family: Arial, sans-serif;
@@ -20,7 +18,8 @@
 
       .header {
         text-align: center;
-        font-size: 16px;
+        font-size: 20px;
+        font-weight: bold;
         margin-bottom: 20px;
       }
 
@@ -36,14 +35,15 @@
         box-sizing: border-box;
       }
 
-      .prompts {
+      .prompts, .gauge, .pending-actions {
         background-color: #f0f0f0;
         padding: 10px;
         border-radius: 5px;
+        text-align: center;
       }
 
-      .prompts h2 {
-        font-size: 14px;
+      .prompts h2, .gauge h2, .pending-actions h2 {
+        font-size: 16px;
         margin-bottom: 10px;
       }
 
@@ -59,26 +59,13 @@
         cursor: pointer;
       }
 
-      .gauge {
-        background-color: #f0f0f0;
-        padding: 10px;
-        border-radius: 5px;
-        text-align: center;
-      }
-
-      .pending-actions {
-        background-color: #f0f0f0;
-        padding: 10px;
-        border-radius: 5px;
-      }
-
       .pending-actions table {
         width: 100%;
         border-collapse: collapse;
+        margin-top: 10px;
       }
 
-      .pending-actions th,
-      .pending-actions td {
+      .pending-actions th, .pending-actions td {
         border: 1px solid #ccc;
         padding: 8px;
         text-align: left;
@@ -147,53 +134,37 @@
 
     <script crossorigin="anonymous" src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
     <script>
+      let directLine;
+
       (async function () {
         const styleOptions = {
           hideUploadButton: true
-          sendBoxPlaceholder: 'Ask anything'
         };
 
         const tokenEndpointURL = new URL('https://748bab4fa737e24aa461e28516a505.4a.environment.api.powerplatform.com/powervirtualagents/botsbyschema/cr4b6_parliamentarySenateEstimatesAssistant/directline/token?api-version=2022-03-01-preview');
-
         const locale = document.documentElement.lang || 'en';
-
         const apiVersion = tokenEndpointURL.searchParams.get('api-version');
 
         const [directLineURL, token] = await Promise.all([
           fetch(new URL(`/powervirtualagents/regionalchannelsettings?api-version=${apiVersion}`, tokenEndpointURL))
-            .then(response => {
-              if (!response.ok) {
-                throw new Error('Failed to retrieve regional channel settings.');
-              }
-
-              return response.json();
-            })
+            .then(response => response.json())
             .then(({ channelUrlsById: { directline } }) => directline),
           fetch(tokenEndpointURL)
-            .then(response => {
-              if (!response.ok) {
-                throw new Error('Failed to retrieve Direct Line token.');
-              }
-
-              return response.json();
-            })
+            .then(response => response.json())
             .then(({ token }) => token)
         ]);
 
-        const directLine = WebChat.createDirectLine({ domain: new URL('v3/directline', directLineURL), token });
+        directLine = WebChat.createDirectLine({ domain: new URL('v3/directline', directLineURL), token });
 
         const subscription = directLine.connectionStatus$.subscribe({
           next(value) {
             if (value === 2) {
-              directLine
-                .postActivity({
-                  localTimezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-                  locale,
-                  name: 'startConversation',
-                  type: 'event'
-                })
-                .subscribe();
-
+              directLine.postActivity({
+                localTimezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                locale,
+                name: 'startConversation',
+                type: 'event'
+              }).subscribe();
               subscription.unsubscribe();
             }
           }
@@ -203,12 +174,15 @@
       })();
 
       function sendMessage(message) {
-        const directLine = WebChat.createDirectLine({ domain: new URL('v3/directline', directLineURL), token });
-        directLine.postActivity({
-          from: { id: 'user', name: 'User' },
-          type: 'message',
-          text: message
-        }).subscribe();
+        if (directLine) {
+          directLine.postActivity({
+            from: { id: 'user', name: 'User' },
+            type: 'message',
+            text: message
+          }).subscribe();
+        } else {
+          console.error('DirectLine not initialized yet.');
+        }
       }
     </script>
   </body>
