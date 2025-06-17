@@ -10,7 +10,7 @@
       }
 
       .container {
-        width: 100%;
+        width: 80%;
         margin: 0 auto;
         margin-top: 50vh;
         transform: translateY(-50%);
@@ -24,6 +24,7 @@
       }
 
       .top-section {
+        width: 80%;
         display: flex;
         justify-content: space-between;
         margin-bottom: 20px;
@@ -80,6 +81,12 @@
 
       .webchat {
         height: 500px;
+      }
+
+      .webchat__bubble--from-user,
+      .webchat__bubble--from-bot {
+        border: none !important;
+        box-shadow: none !important;
       }
 
       .webchat .webchat__bubble--from-user {
