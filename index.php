@@ -49,7 +49,10 @@
       }
       .chat-container {
         width: 80%;
-        margin: 0 auto;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, 0);
         border-radius: 10px;
         overflow: hidden;
       }
