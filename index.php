@@ -4,7 +4,8 @@
   <head>
     <title>Senator Workbench</title>
     <style>
-      html, body {
+      html,
+      body {
         height: 100%;
         margin: 0;
         font-family: Arial, sans-serif;
@@ -19,35 +20,29 @@
       #top-section {
         display: flex;
         justify-content: space-between;
-        padding: 20px;
+        padding: 10px;
         background-color: #f8f9fa;
+        border-bottom: 1px solid #dee2e6;
       }
 
-      #prompts, #pending-actions {
-        width: 48%;
+      #prompts {
+        display: flex;
+        flex-direction: column;
       }
 
-      #prompts h2, #pending-actions h2 {
-        margin-top: 0;
-      }
-
-      #prompts ul {
-        list-style-type: none;
-        padding: 0;
-      }
-
-      #prompts li {
+      .prompt {
+        margin: 5px 0;
+        padding: 10px;
         background-color: #007bff;
         color: white;
-        padding: 10px;
-        margin-bottom: 10px;
-        cursor: pointer;
         border-radius: 5px;
+        cursor: pointer;
         text-align: center;
       }
 
-      #prompts li:hover {
-        background-color: #0056b3;
+      #pending-actions {
+        display: flex;
+        flex-direction: column;
       }
 
       #pending-actions table {
@@ -55,14 +50,11 @@
         border-collapse: collapse;
       }
 
-      #pending-actions th, #pending-actions td {
+      #pending-actions th,
+      #pending-actions td {
         border: 1px solid #dee2e6;
         padding: 8px;
         text-align: left;
-      }
-
-      #pending-actions th {
-        background-color: #e9ecef;
       }
 
       #chat-container {
@@ -71,19 +63,15 @@
         justify-content: center;
         align-items: center;
         padding: 20px;
-        background-color: #f1f1f1;
+        background-color: #e9ecef;
       }
 
-      #chat-window {
+      #webchat {
         width: 60%;
         height: 500px;
         border: 1px solid #dee2e6;
-        border-radius: 5px;
-        overflow: hidden;
-      }
-
-      .webchat__bubble__content {
-        background-color: transparent !important;
+        border-radius: 10px;
+        background-color: white;
       }
     </style>
   </head>
@@ -91,52 +79,98 @@
     <div id="container">
       <div id="top-section">
         <div id="prompts">
-          <h2>Prompts</h2>
-          <ul>
-            <li onclick="sendPrompt('Placeholder 1')">Placeholder 1</li>
-            <li onclick="sendPrompt('Placeholder 2')">Placeholder 2</li>
-            <li onclick="sendPrompt('Placeholder 3')">Placeholder 3</li>
-            <li onclick="sendPrompt('Placeholder 4')">Placeholder 4</li>
-          </ul>
+          <div class="prompt" onclick="sendPrompt('Placeholder 1')">Placeholder 1</div>
+          <div class="prompt" onclick="sendPrompt('Placeholder 2')">Placeholder 2</div>
+          <div class="prompt" onclick="sendPrompt('Placeholder 3')">Placeholder 3</div>
+          <div class="prompt" onclick="sendPrompt('Placeholder 4')">Placeholder 4</div>
         </div>
         <div id="pending-actions">
-          <h2>Pending Actions</h2>
+          <h3>Pending Actions</h3>
           <table>
-            <thead>
-              <tr>
-                <th>Action</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Action 1</td>
-                <td>Pending</td>
-              </tr>
-              <tr>
-                <td>Action 2</td>
-                <td>Pending</td>
-              </tr>
-            </tbody>
+            <tr>
+              <th>Action</th>
+              <th>Status</th>
+            </tr>
+            <tr>
+              <td>Action 1</td>
+              <td>Pending</td>
+            </tr>
+            <tr>
+              <td>Action 2</td>
+              <td>Pending</td>
+            </tr>
           </table>
         </div>
       </div>
       <div id="chat-container">
-        <div id="chat-window">
-          <iframe src="https://copilotstudio.microsoft.com/environments/748bab4f-a737-e24a-a461-e28516a5054a/bots/cr4b6_parliamentarySenateEstimatesAssistant/webchat?__version__=2" frameborder="0" style="width: 100%; height: 100%;"></iframe>
-        </div>
+        <div id="webchat" role="main"></div>
       </div>
     </div>
 
+    <script crossorigin="anonymous" src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
     <script>
-      function sendPrompt(prompt) {
-        const iframe = document.querySelector('#chat-window iframe');
-        const message = {
-          type: 'message',
-          text: prompt
+      (async function () {
+        const styleOptions = {
+          bubbleBackground: 'white',
+          bubbleBorderColor: 'transparent',
+          bubbleBorderRadius: 10,
+          bubbleFromUserBackground: '#007bff',
+          bubbleFromUserTextColor: 'white',
+          hideUploadButton: true
         };
-        iframe.contentWindow.postMessage(message, '*');
-      }
+
+        const tokenEndpointURL = new URL('https://748bab4fa737e24aa461e28516a505.4a.environment.api.powerplatform.com/powervirtualagents/botsbyschema/cr4b6_parliamentarySenateEstimatesAssistant/directline/token?api-version=2022-03-01-preview');
+        const locale = document.documentElement.lang || 'en';
+
+        const apiVersion = tokenEndpointURL.searchParams.get('api-version');
+
+        const [directLineURL, token] = await Promise.all([
+          fetch(new URL(`/powervirtualagents/regionalchannelsettings?api-version=${apiVersion}`, tokenEndpointURL))
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('Failed to retrieve regional channel settings.');
+              }
+              return response.json();
+            })
+            .then(({ channelUrlsById: { directline } }) => directline),
+          fetch(tokenEndpointURL)
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('Failed to retrieve Direct Line token.');
+              }
+              return response.json();
+            })
+            .then(({ token }) => token)
+        ]);
+
+        const directLine = WebChat.createDirectLine({ domain: new URL('v3/directline', directLineURL), token });
+
+        const subscription = directLine.connectionStatus$.subscribe({
+          next(value) {
+            if (value === 2) {
+              directLine
+                .postActivity({
+                  localTimezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                  locale,
+                  name: 'startConversation',
+                  type: 'event'
+                })
+                .subscribe();
+              subscription.unsubscribe();
+            }
+          }
+        });
+
+        WebChat.renderWebChat({ directLine, locale, styleOptions }, document.getElementById('webchat'));
+
+        window.sendPrompt = function (prompt) {
+          directLine.postActivity({
+            from: { id: 'user1', name: 'User' },
+            type: 'message',
+            text: prompt
+          }).subscribe();
+        };
+      })();
     </script>
   </body>
 </html>
