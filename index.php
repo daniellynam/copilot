@@ -288,7 +288,7 @@
 
     (async function () {
       const styleOptions = { hideUploadButton: true };
-      const tokenEndpointURL = new URL('https://748bab4fa737e24aa461e28516a505.4a.environment.api.powerplatform.com/copilotstudio/dataverse-backed/authenticated/bots/cr4b6_careComplianceAi/conversations?api-version=2022-03-01-preview');
+      const tokenEndpointURL = new URL('hhttps://748bab4fa737e24aa461e28516a505.4a.environment.api.powerplatform.com/powervirtualagents/botsbyschema/cr4b6_parliamentarySenateEstimatesAssistant/directline/token?api-version=2022-03-01-preview');
       const locale = document.documentElement.lang || 'en';
       const apiVersion = tokenEndpointURL.searchParams.get('api-version');
 
