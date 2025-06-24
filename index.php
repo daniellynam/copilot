@@ -108,7 +108,7 @@
   </style>
 </head>
 <body>
-  <header>Welcome Daniel</header>
+  <header>Welcome</header>
   <div class="workbench">
     <div class="main-content">
       <div class="section prompts">
