@@ -283,55 +283,56 @@
   </div>
 
   <script crossorigin="anonymous" src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
-  <script>
-    let directLine;
+<script>
+  let directLine;
 
-    (async function () {
-      const styleOptions = { hideUploadButton: true };
-      const tokenEndpointURL = new URL('https://748bab4fa737e24aa461e28516a505.4a.environment.api.powerplatform.com/powervirtualagents/botsbyschema/cr4b6_parliamentarySenateEstimatesAssistant/directline/token?api-version=2022-03-01-preview');
-      const locale = document.documentElement.lang || 'en';
-      const apiVersion = tokenEndpointURL.searchParams.get('api-version');
+  (async function () {
+    const styleOptions = { hideUploadButton: true };
+    const tokenEndpointURL = new URL('https://748bab4fa737e24aa461e28516a505.4a.environment.api.powerplatform.com/powervirtualagents/botsbyschema/cr4b6_parliamentarySenateEstimatesAssistant/directline/token?api-version=2022-03-01-preview');
+    const locale = document.documentElement.lang || 'en';
+    const apiVersion = tokenEndpointURL.searchParams.get('api-version');
 
-      const [directLineURL, token] = await Promise.all([
-        fetch(new URL(`/powervirtualagents/regionalchannelsettings?api-version=${apiVersion}`, tokenEndpointURL))
-          .then(response => response.json())
-          .then(({ channelUrlsById: { directline } }) => directline),
-        fetch(tokenEndpointURL)
-          .then(response => response.json())
-          .then(({ token }) => token)
-      ]);
+    const [directLineURL, token] = await Promise.all([
+      fetch(new URL(`/powervirtualagents/regionalchannelsettings?api-version=${apiVersion}`, tokenEndpointURL))
+        .then(response => response.json())
+        .then(({ channelUrlsById: { directline } }) => directline),
+      fetch(tokenEndpointURL)
+        .then(response => response.json())
+        .then(({ token }) => token)
+    ]);
 
-      directLine = WebChat.createDirectLine({ domain: new URL('v3/directline', directLineURL), token });
+    directLine = WebChat.createDirectLine({ domain: new URL('v3/directline', directLineURL), token });
 
-      const subscription = directLine.connectionStatus$.subscribe({
-        next(value) {
-          if (value === 2) {
-            directLine.postActivity({
-              localTimezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-              locale,
-              name: 'startConversation',
-              type: 'event'
-            }).subscribe();
-            subscription.unsubscribe();
-          }
+    const subscription = directLine.connectionStatus$.subscribe({
+      next(value) {
+        if (value === 2) {
+          directLine.postActivity({
+            localTimezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+            locale,
+            name: 'startConversation',
+            type: 'event'
+          }).subscribe();
+          subscription.unsubscribe();
         }
-      });
-
-      WebChat.renderWebChat({ directLine, locale, styleOptions }, document.getElementById('webchat'));
-    })();
-
-    function sendMessage(message) {
-      if (directLine) {
-        directLine.postActivity({
-          from: { id: 'user', name: 'User' },
-          type: 'message',
-          text: message
-        }).subscribe();
-      } else {
-        console.error('DirectLine not initialized yet.');
       }
+    });
+
+    WebChat.renderWebChat({ directLine, locale, styleOptions }, document.getElementById('webchat'));
+  })();
+
+  function sendMessage(message) {
+    if (directLine) {
+      directLine.postActivity({
+        from: { id: 'user', name: 'User' },
+        type: 'message',
+        text: message
+      }).subscribe();
+    } else {
+      console.error('DirectLine not initialized yet.');
     }
-  </script>
+  }
+</script>
+
 </body>
 </html>');
       const locale = document.documentElement.lang || 'en';
