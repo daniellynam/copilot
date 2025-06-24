@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Agedcare Workbench</title>
+  <title>Aged Care Workbench</title>
   <style>
     html, body {
       height: 100%;
