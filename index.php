@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Senator Workbench</title>
+  <title>Agedcare Workbench</title>
   <style>
     html, body {
       height: 100%;
@@ -55,11 +55,14 @@
       margin-bottom: 1rem;
     }
 
+    .prompt-buttons {
+      display: flex;
+      gap: 1rem;
+    }
+
     .prompt-button {
-      display: block;
-      width: 100%;
+      flex: 1;
       padding: 10px;
-      margin-bottom: 10px;
       background-color: #c7e0f4;
       border: none;
       border-radius: 5px;
@@ -110,20 +113,22 @@
     <div class="main-content">
       <div class="section prompts">
         <h2>Top Prompts</h2>
-        <button class="prompt-button" onclick="sendMessage('Top 3 projects costs')">Top 3 projects costs</button>
-        <button class="prompt-button" onclick="sendMessage('Major program issues')">Major program issues</button>
-        <button class="prompt-button" onclick="sendMessage('Delayed projects')">Delayed projects</button>
+        <div class="prompt-buttons">
+          <button class="prompt-button" onclick="sendMessage('Identify the top 10 residents with the highest clinical risks')">Identify the top 10 residents with the highest clinical risks</button>
+          <button class="prompt-button" onclick="sendMessage('List the residents with pending appointments')">List the residents with pending appointments</button>
+          <button class="prompt-button" onclick="sendMessage('Conduct compliance checks against progress notes')">Conduct compliance checks against progress notes</button>
+        </div>
       </div>
       <div class="section gauge">
-        <h2>Gauge</h2>
-        <div>80% Complete</div>
+        <h2>Care Minutes Compliance</h2>
+        <div>95% Compliant</div>
       </div>
       <div class="section pending-actions">
-        <h2>Pending Actions</h2>
+        <h2>Residents at risk</h2>
         <table>
-          <tr><th>Action</th><th>Status</th></tr>
-          <tr><td>Action 1</td><td>Pending</td></tr>
-          <tr><td>Action 2</td><td>Pending</td></tr>
+          <tr><th>Resident</th><th>Care Minutes</th></tr>
+          <tr><td>Resident 1</td><td>Pending</td></tr>
+          <tr><td>Resident 2</td><td>Pending</td></tr>
         </table>
       </div>
     </div>
@@ -138,7 +143,7 @@
 
     (async function () {
       const styleOptions = { hideUploadButton: true };
-      const tokenEndpointURL = new URL('https://748bab4fa737e24aa461e28516a505.4a.environment.api.powerplatform.com/powervirtualagents/botsbyschema/cr4b6_parliamentarySenateEstimatesAssistant/directline/token?api-version=2022-03-01-preview');
+      const tokenEndpointURL = new URL('https://748bab4fa737e24aa461e28516a505.4a.environment.api.powerplatform.com/copilotstudio/dataverse-backed/authenticated/bots/cr4b6_careComplianceAi/conversations?api-version=2022-03-01-preview');
       const locale = document.documentElement.lang || 'en';
       const apiVersion = tokenEndpointURL.searchParams.get('api-version');
 
