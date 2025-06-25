@@ -54,6 +54,11 @@
       color: #201f1e;
       margin-bottom: 1rem;
     }
+    .section h3 {
+      font-size: 1.0rem;
+      color: #201f1e;
+      margin-bottom: 1rem;
+    }
 
     .prompt-buttons {
       display: flex;
@@ -124,11 +129,12 @@
         <div>95% Compliant</div>
       </div>
       <div class="section pending-actions">
-        <h2>Residents at risk</h2>
+        <h2>AI Recommended Priorities</h2>
+        <h3>Apply these recommendations to improve resident care minutes</h3>
         <table>
-          <tr><th>Resident</th><th>Care Minutes</th></tr>
-          <tr><td>Resident 1</td><td>Pending</td></tr>
-          <tr><td>Resident 2</td><td>Pending</td></tr>
+          <tr><th>Resident</th><th>Care Minutes (Actuals)</th><th>Actions</th></tr>
+          <tr><td>Resident 1</td><td>100min (55%)</td><td>Pending</td></tr>
+          <tr><td>Resident 2</td><td>200min (75%)</td><td>Pending</td></tr>
         </table>
       </div>
     </div>
