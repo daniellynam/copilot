@@ -292,15 +292,15 @@ function sendMessage(message) {
 
 // 👇 Parse structured clinical risk text
 function parseClinicalRiskData(text) {
-  const entries = text.split(/\n(?=\w)/); // Split by new lines before names
+  const entries = text.split(/\n(?=\d+\.\s+\*\*)/); // Split by numbered entries like "1. **Name (UID...)**"
   const residents = [];
 
   entries.forEach(entry => {
-    const nameMatch = entry.match(/^([\w\s]+)\s+\(UID\s*(.*?)\)/);
-    const riskMatch = entry.match(/Risk Level:\s*(\w+)/);
-    const obsMatch = entry.match(/Observations:\s*(.+?)(?=Action Required:)/s);
-    const actionMatch = entry.match(/Action Required:\s*(.+?)(?=Notes:)/s);
-    const notesMatch = entry.match(/Notes:\s*(.+)/s);
+    const nameMatch = entry.match(/\*\*(.*?)\s+\(UID\s*(.*?)\)\*\*/);
+    const riskMatch = entry.match(/- Risk Level:\s*(.*)/);
+    const obsMatch = entry.match(/- Observations:\s*(.*)/);
+    const actionMatch = entry.match(/- Action Required:\s*(.*)/);
+    const notesMatch = entry.match(/- Notes:\s*(.*)/);
 
     if (nameMatch) {
       residents.push({
