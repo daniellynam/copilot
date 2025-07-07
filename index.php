@@ -292,10 +292,13 @@ function sendMessage(message) {
 
 // 👇 Parse structured clinical risk text
 function parseClinicalRiskData(text) {
-  const entries = text.split(/\n(?=\d+\.\s+\*\*)/); // Split by numbered entries like "1. **Name (UID...)**"
+  const entries = text.split(/\n\d+\.\s+\*\*/); // Split by numbered entries like "1. **"
   const residents = [];
 
   entries.forEach(entry => {
+    // Re-add the "**" prefix that was removed during split
+    entry = "**" + entry.trim();
+
     const nameMatch = entry.match(/\*\*(.*?)\s+\(UID\s*(.*?)\)\*\*/);
     const riskMatch = entry.match(/- Risk Level:\s*(.*)/);
     const obsMatch = entry.match(/- Observations:\s*(.*)/);
@@ -316,6 +319,7 @@ function parseClinicalRiskData(text) {
 
   return residents;
 }
+
 
 // 👇 Update the table with parsed data
 function updateClinicalRiskTable(residents) {
