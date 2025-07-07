@@ -144,6 +144,53 @@
  background-color: #ffffff;
  }
  </style>
+ 
+https://cdn.jsdelivr.net/npm/chart.js
+<style>
+  .chart-container {
+    position: relative;
+    width: 300px;
+    height: 150px;
+    margin-top: 1rem;
+  }
+
+  .center-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -30%);
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+  }
+</style>
+
+ <script>
+  const ctx = document.getElementById('halfPieChart').getContext('2d');
+
+  new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Compliance', 'Remaining'],
+      datasets: [{
+        data: [95, 5],
+        backgroundColor: ['#4CAF50', '#e0e0e0'],
+        borderWidth: 0
+      }]
+    },
+    options: {
+      rotation: Math.PI,
+      circumference: Math.PI,
+      cutout: '70%',
+      plugins: {
+        legend: { display: false },
+        tooltip: { enabled: false }
+      }
+    }
+  });
+</script>
+
+ 
 </head>
 <body>
  <header>Welcome Daniel</header>
@@ -163,14 +210,19 @@
   </button>
   <button class="copilot-button-modern" onclick="sendMessage('Conduct compliance checks against progress notes')">
     <span class="icon">✅</span>
-    <span class="label">Compliance Check: Progress Notes</span>
+    <span class="label">Compliance Check - Progress Notes</span>
   </button>
 </div>
 
  </div>
  <div class="section gauge">
  <h2>Care Minutes Compliance</h2>
- <div>95% Compliant</div>
+  
+ <div class="chart-container">
+  <canvas id="halfPieChart"></canvas>
+  <div class="center-text" id="percentageText">95%</div>
+</div>
+
  </div>
  <div class="section pending-actions">
  <h2>AI Recommended Priorities</h2>
