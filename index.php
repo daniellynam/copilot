@@ -197,14 +197,24 @@
 
  </div>
  <div class="section pending-actions">
- <h2>AI Recommended Priorities</h2>
- <h3>Apply these recommendations to improve resident care minutes</h3>
- <table>
- <tr><th>Resident</th><th>Care Minutes (Actuals)</th><th>Actions</th></tr>
- <tr><td>Resident 1</td><td>100min (55%)</td><td>Pending</td></tr>
- <tr><td>Resident 2</td><td>200min (75%)</td><td>Pending</td></tr>
- </table>
- </div>
+   <h2>AI Recommended Priorities</h2>
+   <h3>Apply these recommendations to improve resident care minutes</h3>
+   <table id="clinicalRiskTable">
+     <thead>
+       <tr>
+         <th>Resident</th>
+         <th>UID</th>
+         <th>Risk Level</th>
+         <th>Observations</th>
+         <th>Action Required</th>
+         <th>Notes</th>
+       </tr>
+     </thead>
+     <tbody>
+       <!-- Rows will be inserted here -->
+     </tbody>
+   </table>
+  </div>
  </div>
  <div class="chat-window">
  <div id="webchat" class="webchat" role="main"></div>
@@ -212,55 +222,114 @@
  </div>
 
  <script crossorigin="anonymous" src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
- <script>
- let directLine;
+<script>
+let directLine;
 
- (async function () {
- const styleOptions = { hideUploadButton: true };
- const tokenEndpointURL = new URL('https://748bab4fa737e24aa461e28516a505.4a.environment.api.powerplatform.com/powervirtualagents/botsbyschema/cr4b6_parliamentarySenateEstimatesAssistant/directline/token?api-version=2022-03-01-preview');
- const locale = document.documentElement.lang || 'en';
- const apiVersion = tokenEndpointURL.searchParams.get('api-version');
+(async function () {
+  const styleOptions = { hideUploadButton: true };
+  const tokenEndpointURL = new URL('https://748bab4fa737e24aa461e28516a505.4a.environment.api.powerplatform.com/powervirtualagents/botsbyschema/cr4b6_parliamentarySenateEstimatesAssistant/directline/token?api-version=2022-03-01-preview');
+  const locale = document.documentElement.lang || 'en';
+  const apiVersion = tokenEndpointURL.searchParams.get('api-version');
 
- const [directLineURL, token] = await Promise.all([
- fetch(new URL(`/powervirtualagents/regionalchannelsettings?api-version=${apiVersion}`, tokenEndpointURL))
- .then(response => response.json())
- .then(({ channelUrlsById: { directline } }) => directline),
- fetch(tokenEndpointURL)
- .then(response => response.json())
- .then(({ token }) => token)
- ]);
+  const [directLineURL, token] = await Promise.all([
+    fetch(new URL(`/powervirtualagents/regionalchannelsettings?api-version=${apiVersion}`, tokenEndpointURL))
+      .then(response => response.json())
+      .then(({ channelUrlsById: { directline } }) => directline),
+    fetch(tokenEndpointURL)
+      .then(response => response.json())
+      .then(({ token }) => token)
+  ]);
 
- directLine = WebChat.createDirectLine({ domain: new URL('v3/directline', directLineURL), token });
+  directLine = WebChat.createDirectLine({ domain: new URL('v3/directline', directLineURL), token });
 
- const subscription = directLine.connectionStatus$.subscribe({
- next(value) {
- if (value === 2) {
- directLine.postActivity({
- localTimezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
- locale,
- name: 'startConversation',
- type: 'event'
- }).subscribe();
- subscription.unsubscribe();
- }
- }
- });
+  const subscription = directLine.connectionStatus$.subscribe({
+    next(value) {
+      if (value === 2) {
+        directLine.postActivity({
+          localTimezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          locale,
+          name: 'startConversation',
+          type: 'event'
+        }).subscribe();
+        subscription.unsubscribe();
+      }
+    }
+  });
 
- WebChat.renderWebChat({ directLine, locale, styleOptions }, document.getElementById('webchat'));
- })();
+  WebChat.renderWebChat({ directLine, locale, styleOptions }, document.getElementById('webchat'));
 
- function sendMessage(message) {
- if (directLine) {
- directLine.postActivity({
- from: { id: 'user', name: 'User' },
- type: 'message',
- text: message
- }).subscribe();
- } else {
- console.error('DirectLine not initialized yet.');
- }
- }
- </script>
+  // 👇 Listen for bot messages and update table
+  directLine.activity$.subscribe(activity => {
+    if (activity.type === 'message' && activity.from.role === 'bot') {
+      const text = activity.text;
+      if (text.includes('Risk Level')) {
+        const residents = parseClinicalRiskData(text);
+        updateClinicalRiskTable(residents);
+      }
+    }
+  });
+})();
+
+function sendMessage(message) {
+  if (directLine) {
+    directLine.postActivity({
+      from: { id: 'user', name: 'User' },
+      type: 'message',
+      text: message
+    }).subscribe();
+  } else {
+    console.error('DirectLine not initialized yet.');
+  }
+}
+
+// 👇 Parse structured clinical risk text
+function parseClinicalRiskData(text) {
+  const entries = text.split(/\n(?=\w)/); // Split by new lines before names
+  const residents = [];
+
+  entries.forEach(entry => {
+    const nameMatch = entry.match(/^([\w\s]+)\s+\(UID\s*(.*?)\)/);
+    const riskMatch = entry.match(/Risk Level:\s*(\w+)/);
+    const obsMatch = entry.match(/Observations:\s*(.+?)(?=Action Required:)/s);
+    const actionMatch = entry.match(/Action Required:\s*(.+?)(?=Notes:)/s);
+    const notesMatch = entry.match(/Notes:\s*(.+)/s);
+
+    if (nameMatch) {
+      residents.push({
+        name: nameMatch[1].trim(),
+        uid: nameMatch[2].trim(),
+        risk: riskMatch?.[1]?.trim() || '',
+        observations: obsMatch?.[1]?.trim() || '',
+        action: actionMatch?.[1]?.trim() || '',
+        notes: notesMatch?.[1]?.trim() || ''
+      });
+    }
+  });
+
+  return residents;
+}
+
+// 👇 Update the table with parsed data
+function updateClinicalRiskTable(residents) {
+  const tableBody = document.querySelector('#clinicalRiskTable tbody');
+  if (!tableBody) return;
+
+  tableBody.innerHTML = ''; // Clear existing rows
+
+  residents.forEach(resident => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${resident.name}</td>
+      <td>${resident.uid}</td>
+      <td>${resident.risk}</td>
+      <td>${resident.observations}</td>
+      <td>${resident.action}</td>
+      <td>${resident.notes}</td>
+    `;
+    tableBody.appendChild(row);
+  });
+}
+</script>
 
 
  <script src="https://cdn.jsdelivr.net/npm/chart.js"></rt configuration script -->
