@@ -192,7 +192,7 @@
   
  <div class="chart-container">
   <canvas id="halfPieChart"></canvas>
-  <div class="center-text" id="percentageText">95%</div>
+  <div class="center-text" id="percentageText">90%</div>
 </div>
 
  </div>
@@ -258,16 +258,23 @@ let directLine;
 
   WebChat.renderWebChat({ directLine, locale, styleOptions }, document.getElementById('webchat'));
 
-  // 👇 Listen for bot messages and update table
-  directLine.activity$.subscribe(activity => {
-    if (activity.type === 'message' && activity.from.role === 'bot') {
+// 👇 Listen for bot messages and log everything
+directLine.activity$.subscribe(activity => {
+  if (activity.type === 'message') {
+    console.log("🔔 Message received:", activity);
+
+    if (activity.from.role === 'bot') {
       const text = activity.text;
-      if (text.includes('Risk Level')) {
+      console.log("💬 Bot says:", text);
+
+      if (text && text.includes('Risk Level')) {
         const residents = parseClinicalRiskData(text);
+        console.log("📊 Parsed residents:", residents);
         updateClinicalRiskTable(residents);
       }
     }
-  });
+  }
+});
 })();
 
 function sendMessage(message) {
