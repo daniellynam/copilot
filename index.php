@@ -164,33 +164,6 @@ https://cdn.jsdelivr.net/npm/chart.js
     color: #333;
   }
 </style>
-
- <script>
-  const ctx = document.getElementById('halfPieChart').getContext('2d');
-
-  new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      labels: ['Compliance', 'Remaining'],
-      datasets: [{
-        data: [95, 5],
-        backgroundColor: ['#4CAF50', '#e0e0e0'],
-        borderWidth: 0
-      }]
-    },
-    options: {
-      rotation: Math.PI,
-      circumference: Math.PI,
-      cutout: '70%',
-      plugins: {
-        legend: { display: false },
-        tooltip: { enabled: false }
-      }
-    }
-  });
-</script>
-
- 
 </head>
 <body>
  <header>Welcome Daniel</header>
@@ -289,5 +262,34 @@ https://cdn.jsdelivr.net/npm/chart.js
  }
  }
  </script>
+
+
+ <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const ctx = document.getElementById('halfPieChart').getContext('2d');
+
+    new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Compliance', 'Remaining'],
+        datasets: [{
+          data: [95, 5],
+          backgroundColor: ['#4CAF50', '#e0e0e0'],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        rotation: Math.PI,
+        circumference: Math.PI,
+        cutout: '70%',
+        plugins: {
+          legend: { display: false },
+          tooltip: { enabled: false }
+        }
+      }
+    });
+  });
+</script>
+
 </body>
 </html>
