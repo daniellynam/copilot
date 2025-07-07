@@ -258,23 +258,24 @@ let directLine;
 
   WebChat.renderWebChat({ directLine, locale, styleOptions }, document.getElementById('webchat'));
 
-// 👇 Listen for bot messages and log everything
 directLine.activity$.subscribe(activity => {
+  console.log("🔔 Activity received:", activity);
+
   if (activity.type === 'message') {
-    console.log("🔔 Message received:", activity);
+    const sender = activity.from?.role || 'unknown';
+    const text = activity.text || '[No text content]';
 
-    if (activity.from.role === 'bot') {
-      const text = activity.text;
-      console.log("💬 Bot says:", text);
+    console.log(`💬 Message from ${sender}:`, text);
 
-      if (text && text.includes('Risk Level')) {
-        const residents = parseClinicalRiskData(text);
-        console.log("📊 Parsed residents:", residents);
-        updateClinicalRiskTable(residents);
-      }
+    // Only parse if it's from the bot and contains expected content
+    if (sender === 'bot' && text.includes('Risk Level')) {
+      const residents = parseClinicalRiskData(text);
+      console.log("📊 Parsed residents:", residents);
+      updateClinicalRiskTable(residents);
     }
   }
 });
+
 })();
 
 function sendMessage(message) {
