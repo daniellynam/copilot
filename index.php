@@ -144,8 +144,7 @@
  background-color: #ffffff;
  }
  </style>
- 
-https://cdn.jsdelivr.net/npm/chart.js
+
 <style>
   .chart-container {
     position: relative;
@@ -264,6 +263,7 @@ https://cdn.jsdelivr.net/npm/chart.js
  </script>
 
 
+ <script src="https://cdn.jsdelivr.net/npm/chart.js"></rt configuration script -->
  <script>
   document.addEventListener('DOMContentLoaded', function () {
     const ctx = document.getElementById('halfPieChart').getContext('2d');
