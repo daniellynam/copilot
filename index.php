@@ -185,20 +185,11 @@
     <span class="label">Compliance Check - Progress Notes</span>
   </button>
 </div>
-
  </div>
- <div class="section gauge">
- <h2>Care Minutes Compliance</h2>
-  
- <div class="chart-container">
-  <canvas id="halfPieChart"></canvas>
-  <div class="center-text" id="percentageText">90%</div>
-</div>
 
- </div>
  <div class="section pending-actions">
    <h2>AI Recommended Priorities</h2>
-   <h3>Apply these recommendations to improve resident care minutes</h3>
+   <h3>Please review these 10 residents</h3>
    <table id="clinicalRiskTable">
      <thead>
        <tr>
