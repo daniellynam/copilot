@@ -11,6 +11,22 @@ I have this code. Can you help update notes. Dont change any code. Just update n
  background-color: #f3f2f1;
  }
 
+/* Copilot-style button */
+.copilot-button {
+  flex: 1;
+  padding: 12px 16px;
+  background-color: #ffffff;
+  border: 1px solid #c8c6c4;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #323130;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  text-align: left;
+}
+
  header {
  background-color: #ffffff;
  padding: 1rem 2rem;
@@ -118,11 +134,19 @@ I have this code. Can you help update notes. Dont change any code. Just update n
  <div class="main-content">
  <div class="section prompts">
  <h2>Top Prompts</h2>
- <div class="prompt-buttons">
- <button class="prompt-button" onclick="sendMessage('Identify the top 10 residents with the highest clinical risks')">Identify the top 10 residents with the highest clinical risks</button>
- <button class="prompt-button" onclick="sendMessage('List the residents with pending appointments')">List the residents with pending appointments</button>
- <button class="prompt-button" onclick="sendMessage('Conduct compliance checks against progress notes')">Conduct compliance checks against progress notes</button>
- </div>
+
+<div class="prompt-buttons">
+  <button class="copilot-button" onclick="sendMessage('Identify the top 10 residents with the highest clinical risks')">
+    🧠 Identify Top 10 Clinical Risk Residents
+  </button>
+  <button class="copilot-button" onclick="sendMessage('List the residents with pending appointments')">
+    📅 View Pending Appointments
+  </button>
+  <button class="copilot-button" onclick="sendMessage('Conduct compliance checks against progress notes')">
+    ✅ Compliance Check: Progress Notes
+  </button>
+</div>
+
  </div>
  <div class="section gauge">
  <h2>Care Minutes Compliance</h2>
