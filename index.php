@@ -1,4 +1,3 @@
-I have this code. Can you help update notes. Dont change any code. Just update notes. Intent is to make it so i can make small changes in the future: 
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,21 +10,39 @@ I have this code. Can you help update notes. Dont change any code. Just update n
  background-color: #f3f2f1;
  }
 
-/* Copilot-style button */
-.copilot-button {
-  flex: 1;
-  padding: 12px 16px;
-  background-color: #ffffff;
-  border: 1px solid #c8c6c4;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: #323130;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  text-align: left;
+.copilot-button-modern {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 14px 20px;
+  background: linear-gradient(145deg, #ffffff, #f3f3f3);
+  border: 1px solid #d0d0d0;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1b1a19;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  width: 100%;
+  text-align: left;
 }
+
+.copilot-button-modern:hover {
+  background: linear-gradient(145deg, #e6f0fa, #ffffff);
+  border-color: #0078d4;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+  color: #005a9e;
+}
+
+.copilot-button-modern .icon {
+  font-size: 1.25rem;
+}
+
+.copilot-button-modern .label {
+  flex: 1;
+}
+
 
  header {
  background-color: #ffffff;
@@ -136,14 +153,17 @@ I have this code. Can you help update notes. Dont change any code. Just update n
  <h2>Top Prompts</h2>
 
 <div class="prompt-buttons">
-  <button class="copilot-button" onclick="sendMessage('Identify the top 10 residents with the highest clinical risks')">
-    🧠 Identify Top 10 Clinical Risk Residents
+  <button class="copilot-button-modern" onclick="sendMessage('Identify the top 10 residents with the highest clinical risks')">
+    <span class="icon">🧠</span>
+    <span class="label">Identify Top 10 Clinical Risk Residents</span>
   </button>
-  <button class="copilot-button" onclick="sendMessage('List the residents with pending appointments')">
-    📅 View Pending Appointments
+  <button class="copilot-button-modern" onclick="sendMessage('List the residents with pending appointments')">
+    <span class="icon">📅</span>
+    <span class="label">View Pending Appointments</span>
   </button>
-  <button class="copilot-button" onclick="sendMessage('Conduct compliance checks against progress notes')">
-    ✅ Compliance Check: Progress Notes
+  <button class="copilot-button-modern" onclick="sendMessage('Conduct compliance checks against progress notes')">
+    <span class="icon">✅</span>
+    <span class="label">Compliance Check: Progress Notes</span>
   </button>
 </div>
 
