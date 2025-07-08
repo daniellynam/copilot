@@ -288,9 +288,7 @@ function parseClinicalRiskData(text) {
 
   entries.forEach(entry => {
     // Re-add the "**" prefix that was removed during split
-    // entry = "**" + entry.trim();
-    entry = entry.replace(/^\*\*\d+\.\s*/, '**');
-
+    entry = "**" + entry.trim();
 
     const nameMatch = entry.match(/\*\*(.*?)\s+\(UID\s*(.*?)\)\*\*/);
     const riskMatch = entry.match(/- Risk Level:\s*(.*)/);
@@ -299,6 +297,9 @@ function parseClinicalRiskData(text) {
     const notesMatch = entry.match(/- Notes:\s*(.*)/);
 
     if (nameMatch) {
+      // Clean the name by removing any leading digits and punctuation like "1. "
+      const cleanedName = nameMatch[1].trim().replace(/^\d+\.\s*/, '');
+
       residents.push({
         name: nameMatch[1].trim(),
         uid: nameMatch[2].trim(),
