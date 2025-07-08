@@ -288,7 +288,9 @@ function parseClinicalRiskData(text) {
 
   entries.forEach(entry => {
     // Re-add the "**" prefix that was removed during split
-    entry = "**" + entry.trim();
+    // entry = "**" + entry.trim();
+    entry = entry.replace(/^\*\*\d+\.\s*/, '**');
+
 
     const nameMatch = entry.match(/\*\*(.*?)\s+\(UID\s*(.*?)\)\*\*/);
     const riskMatch = entry.match(/- Risk Level:\s*(.*)/);
