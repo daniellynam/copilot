@@ -297,11 +297,13 @@ function parseClinicalRiskData(text) {
     const notesMatch = entry.match(/- Notes:\s*(.*)/);
 
     if (nameMatch) {
-      // Clean the name by removing any leading digits and punctuation like "1. "
-      const cleanedName = nameMatch[1].trim().replace(/^\d+\.\s*/, '');
+      // Remove any leading numbering like "1. " from the name
+      const rawName = nameMatch[1].trim();
+      const cleanedName = rawName.replace(/^\d+\.\s*/, '');
 
       residents.push({
-        name: nameMatch[1].trim(),
+        // name: nameMatch[1].trim(),
+        name: cleanedName,
         uid: nameMatch[2].trim(),
         risk: riskMatch?.[1]?.trim() || '',
         observations: obsMatch?.[1]?.trim() || '',
