@@ -299,7 +299,9 @@ function parseClinicalRiskData(text) {
     if (nameMatch) {
       // Remove any leading numbering like "1. " from the name
       const rawName = nameMatch[1].trim();
-      const cleanedName = rawName.replace(/^\d+\.\s*/, '');
+      const cleanedName = rawName
+        .replace(/^\d+\.\s*/, '')  // Remove "1. " if present
+        .replace(/\*\*/g, '')      // Remove all "**"
 
       residents.push({
         // name: nameMatch[1].trim(),
